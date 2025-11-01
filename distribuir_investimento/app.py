@@ -21,9 +21,65 @@ def distribuir_investimento(investimentos, metas_percentuais, valor_disponivel):
 
 
 # ---------- INTERFACE ----------
-st.set_page_config(page_title="Distribuidor de Investimentos", page_icon="💰", layout="centered")
+st.set_page_config(page_title="InvestDistrib", page_icon="💰", layout="centered")
 
-st.title("💰 Distribuidor de Investimentos")
+# ---------- CABEÇALHO MODERNO E CENTRALIZADO ----------
+from PIL import Image
+import base64
+from io import BytesIO
+
+def image_to_base64(img_path):
+    """Converte a imagem para Base64 para exibição via HTML."""
+    img = Image.open(img_path)
+    buffered = BytesIO()
+    img.save(buffered, format="PNG")
+    return base64.b64encode(buffered.getvalue()).decode()
+
+# Carregar a logo
+logo_base64 = image_to_base64("logo_investdistrib.png")
+
+# Inserir CSS e HTML customizado
+st.markdown(
+    f"""
+    <style>
+    .header-container {{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin-top: -30px;
+        margin-bottom: 20px;
+    }}
+    .header-logo {{
+        width: 130px;
+        height: auto;
+        margin-bottom: 10px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }}
+    .header-title {{
+        font-size: 2.4rem;
+        font-weight: 800;
+        color: #1a1a1a;
+        margin-bottom: 4px;
+    }}
+    .header-subtitle {{
+        font-size: 1.1rem;
+        color: #555;
+    }}
+    </style>
+
+    <div class="header-container">
+        <img src="data:image/png;base64,{logo_base64}" class="header-logo" alt="InvestDistrib logo">
+        <div class="header-subtitle">Distribuidor inteligente de investimentos</div>
+    </div>
+    <hr>
+    """,
+    unsafe_allow_html=True
+)
+
+
 st.write("""
 Calcule quanto investir em cada grupo para atingir a **porcentagem meta** da sua carteira de forma simples e visual.
 """)
