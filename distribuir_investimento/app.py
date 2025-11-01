@@ -4,6 +4,17 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import streamlit.components.v1 as components
 
+# --- Detecta se é mobile (executa só uma vez) ---
+if "mobile_view" not in st.session_state:
+    st.session_state["mobile_view"] = False
+
+st.markdown("""
+<script>
+    const mobile = window.innerWidth < 768;
+    window.parent.postMessage({type: 'streamlit:setComponentValue', key: 'mobile_view', value: mobile}, '*');
+</script>
+""", unsafe_allow_html=True)
+
 # ---------- LÓGICA PRINCIPAL ----------
 def distribuir_investimento(investimentos, metas_percentuais, valor_disponivel):
     total_atual = sum(investimentos)
@@ -95,11 +106,11 @@ nomes = []
 investimentos = []
 metas_percentuais = []
 
-st.subheader("📋 Dados dos investimentos atuais")
-colunas = st.columns([2, 2, 2])
-colunas[0].markdown("**Nome do ativo**")
-colunas[1].markdown("**Valor atual (R$)**")
-colunas[2].markdown("**Meta (%)**")
+# st.subheader("📋 Dados dos investimentos atuais")
+# colunas = st.columns([2, 2, 2])
+# colunas[0].markdown("**Nome do ativo**")
+# colunas[1].markdown("**Valor atual (R$)**")
+# colunas[2].markdown("**Meta (%)**")
 
 # --- CSS para alinhamento perfeito e visual limpo ---
 st.markdown("""
@@ -129,10 +140,67 @@ label[data-testid="stMarkdownContainer"] > p {
 </style>
 """, unsafe_allow_html=True)
 
-# --- Loop dos investimentos (agora único) ---
+# --- CSS para comportamento responsivo das labels ---
+st.markdown("""
+<style>
+/* Hide per-field labels on desktop, show column headers */
+@media (min-width: 769px) {
+  .mobile-label { display: none !important; }  /* labels individuais escondidas no desktop */
+  .desktop-headers { display: block !important; }
+}
+/* On small screens show per-field labels and hide the desktop header row */
+@media (max-width: 768px) {
+  .mobile-label { display: block !important; margin-bottom:6px; color:#333; font-weight:600; }
+  .desktop-headers { display: none !important; }
+}
+
+/* Styling inputs to keep consistent look */
+div[data-testid="stTextInput"] > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+input {
+    text-align: center;
+    height: 38px !important;
+    padding: 6px 8px !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    font-size: 14px !important;
+}
+input::placeholder {
+    color: #9aa0a6 !important;
+    text-align: center;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# Cabeçalhos (visíveis no desktop, escondidos no mobile)
+st.markdown(
+    '<div class="desktop-headers" style="display:block; margin-bottom:8px;">'
+    '<div style="display:flex; gap:16px;">'
+    '<div style="flex:2; font-weight:700;">Nome do ativo</div>'
+    '<div style="flex:2; font-weight:700;">Valor atual (R$)</div>'
+    '<div style="flex:2; font-weight:700;">Meta (%)</div>'
+    '</div>'
+    '</div>',
+    unsafe_allow_html=True
+)
+
+# --- Loop responsivo e legível ---
 for i in range(num_ativos):
+    # bloco título do ativo (sempre)
+    st.markdown(f"<div style='margin-top:6px; margin-bottom:6px; font-weight:600;'>💼 Ativo {i+1}</div>", unsafe_allow_html=True)
+
+    # Cria as colunas para desktop - no mobile elas vão empilhar mas labels locais aparecem
     c1, c2, c3 = st.columns([2, 2, 2])
 
+    # Label visível apenas no mobile (escondida no desktop via CSS)
+    c1.markdown('<div class="mobile-label">Nome do ativo</div>', unsafe_allow_html=True)
+    c2.markdown('<div class="mobile-label">Valor atual (R$)</div>', unsafe_allow_html=True)
+    c3.markdown('<div class="mobile-label">Meta (%)</div>', unsafe_allow_html=True)
+
+    # Inputs (labels do streamlit colapsados para evitar duplicação)
     nome = c1.text_input(
         f"Nome do ativo {i+1}",
         value=f"Ativo {i+1}",
@@ -170,6 +238,10 @@ for i in range(num_ativos):
     nomes.append(nome)
     investimentos.append(valor)
     metas_percentuais.append(meta)
+
+    # separador suave
+    st.markdown("<hr style='border:0.5px solid #f1f1f1; margin:12px 0;'>", unsafe_allow_html=True)
+
 
 soma_metas = sum(metas_percentuais)
 if soma_metas != 100:
