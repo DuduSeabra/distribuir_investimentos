@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 # ---------- LÓGICA PRINCIPAL ----------
 def distribuir_investimento(investimentos, metas_percentuais, valor_disponivel):
@@ -35,8 +36,9 @@ def image_to_base64(img_path):
     img.save(buffered, format="PNG")
     return base64.b64encode(buffered.getvalue()).decode()
 
-# Carregar a logo
-logo_base64 = image_to_base64("logo_investdistrib.png")
+# Garante o caminho correto, mesmo se o app for executado de outra pasta
+logo_path = Path(__file__).parent / "logo_investdistrib.png"
+logo_base64 = image_to_base64(logo_path)
 
 # Inserir CSS e HTML customizado
 st.markdown(
