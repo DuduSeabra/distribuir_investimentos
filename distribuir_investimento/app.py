@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import streamlit.components.v1 as components
 
+# ---------- INTERFACE ----------
+st.set_page_config(page_title="InvestDistrib", page_icon="💰", layout="centered")
+
 # --- Detecta se é mobile (executa só uma vez) ---
 if "mobile_view" not in st.session_state:
     st.session_state["mobile_view"] = False
@@ -33,8 +36,6 @@ def distribuir_investimento(investimentos, metas_percentuais, valor_disponivel):
     return distribuicao, valores_alvo
 
 
-# ---------- INTERFACE ----------
-st.set_page_config(page_title="InvestDistrib", page_icon="💰", layout="centered")
 
 # ---------- CABEÇALHO MODERNO E CENTRALIZADO ----------
 from PIL import Image
@@ -106,11 +107,6 @@ nomes = []
 investimentos = []
 metas_percentuais = []
 
-# st.subheader("📋 Dados dos investimentos atuais")
-# colunas = st.columns([2, 2, 2])
-# colunas[0].markdown("**Nome do ativo**")
-# colunas[1].markdown("**Valor atual (R$)**")
-# colunas[2].markdown("**Meta (%)**")
 
 # --- CSS para alinhamento perfeito e visual limpo ---
 st.markdown("""
