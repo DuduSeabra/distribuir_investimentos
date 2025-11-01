@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
+import streamlit.components.v1 as components
 
 # ---------- LÓGICA PRINCIPAL ----------
 def distribuir_investimento(investimentos, metas_percentuais, valor_disponivel):
@@ -100,22 +101,101 @@ colunas[0].markdown("**Nome do ativo**")
 colunas[1].markdown("**Valor atual (R$)**")
 colunas[2].markdown("**Meta (%)**")
 
-for i in range(num_ativos):
-    with st.container():
-        c1, c2, c3 = st.columns([2, 2, 2])
-        nome = c1.text_input(f"Nome do ativo {i+1}", value=f"Ativo {i+1}")
-        valor = c2.number_input(f"Valor atual {i+1}", min_value=0.0, step=0.01, label_visibility="collapsed")
-        meta = c3.number_input(f"Meta {i+1}", min_value=0.0, max_value=100.0, step=0.1, label_visibility="collapsed")
+# --- CSS para alinhamento perfeito e visual limpo ---
+st.markdown("""
+<style>
+div[data-testid="stTextInput"] > div:first-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+input {
+    text-align: center;
+    height: 38px !important;
+    padding: 6px 8px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 6px !important;
+    font-size: 14px !important;
+}
+input::placeholder {
+    color: #bbb !important;
+    text-align: center;
+}
+label[data-testid="stMarkdownContainer"] > p {
+    font-weight: 600;
+    color: #1a1a1a;
+    text-align: center;
+}
+</style>
+""", unsafe_allow_html=True)
 
-        nomes.append(nome)
-        investimentos.append(valor)
-        metas_percentuais.append(meta)
+# --- Loop dos investimentos (agora único) ---
+for i in range(num_ativos):
+    c1, c2, c3 = st.columns([2, 2, 2])
+
+    nome = c1.text_input(
+        f"Nome do ativo {i+1}",
+        value=f"Ativo {i+1}",
+        label_visibility="collapsed",
+        key=f"nome_{i}"
+    )
+
+    valor_str = c2.text_input(
+        f"Valor atual {i+1}",
+        value="",
+        placeholder="0,00",
+        label_visibility="collapsed",
+        key=f"valor_{i}"
+    )
+
+    meta_str = c3.text_input(
+        f"Meta {i+1}",
+        value="",
+        placeholder="0,0",
+        label_visibility="collapsed",
+        key=f"meta_{i}"
+    )
+
+    # Conversões seguras
+    try:
+        valor = float(valor_str.replace(",", ".")) if valor_str.strip() != "" else 0.0
+    except ValueError:
+        valor = 0.0
+
+    try:
+        meta = float(meta_str.replace(",", ".")) if meta_str.strip() != "" else 0.0
+    except ValueError:
+        meta = 0.0
+
+    nomes.append(nome)
+    investimentos.append(valor)
+    metas_percentuais.append(meta)
 
 soma_metas = sum(metas_percentuais)
 if soma_metas != 100:
     st.warning(f"⚠️ As porcentagens devem somar 100%. Atualmente somam {soma_metas:.2f}%.")
 
-valor_disponivel = st.number_input("Valor disponível para investir este mês (R$)", min_value=0.0, step=0.01)
+# --- Campo de valor disponível (com placeholder estilo 0,00) ---
+st.markdown("""
+<style>
+input[data-testid="stNumberInput"] {
+    text-align: center !important;
+}
+</style>
+""", unsafe_allow_html=True)
+
+valor_disponivel_str = st.text_input(
+    "Valor disponível para investir este mês (R$)",
+    value="",
+    placeholder="0,00",
+    key="valor_disponivel"
+)
+
+# Conversão segura do texto para número
+try:
+    valor_disponivel = float(valor_disponivel_str.replace(",", ".")) if valor_disponivel_str.strip() != "" else 0.0
+except ValueError:
+    valor_disponivel = 0.0
 
 if st.button("Calcular distribuição", type="primary"):
     if soma_metas != 100:
