@@ -314,6 +314,12 @@ if st.button("Calcular distribuição", type="primary"):
             ax2.pie(final_pct, labels=nomes, autopct='%1.1f%%', startangle=90)
             ax2.axis('equal')
             st.pyplot(fig2)
+        
+        st.markdown("""
+        <div align="center">
+        <script async="async" data-cfasync="false" src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>
+        <div id="container-58f616bbd286af88e21451bfdf8e8464"></div>
+        """, unsafe_allow_html=True)
 
 st.divider()
 st.caption("Criado por Dudu Seabra | Ferramenta gratuita de distribuição de investimentos 💡")
