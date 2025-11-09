@@ -317,8 +317,10 @@ if st.button("Calcular distribuição", type="primary"):
         
 
 st.divider()
-st.markdown("""
-        <script async="async" data-cfasync="false" src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>
-        <div id="container-58f616bbd286af88e21451bfdf8e8464"></div>
-        """, unsafe_allow_html=True)
+ad_code = """
+<script async="async" data-cfasync="false" src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>
+<div id="container-58f616bbd286af88e21451bfdf8e8464"></div>
+"""
+
+components.html(ad_code, height=120, scrolling=False)
 st.caption("Criado por Dudu Seabra | Ferramenta gratuita de distribuição de investimentos 💡")
