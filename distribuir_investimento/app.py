@@ -274,9 +274,6 @@ if st.button("Calcular distribuição", type="primary"):
         st.subheader("📊 Resultado da distribuição")
         df_resultado = pd.DataFrame({
             "Ativo": nomes,
-            "Valor Atual (R$)": investimentos,
-            "Meta (%)": metas_percentuais,
-            "Valor Alvo (R$)": [round(v, 2) for v in valores_alvo],
             "Aporte Sugerido (R$)": [round(v, 2) for v in distribuicao],
         })
 
