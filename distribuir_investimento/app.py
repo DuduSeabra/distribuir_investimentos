@@ -319,65 +319,18 @@ if st.button("Calcular distribuição", type="primary"):
 
 st.divider()
 
-# === Bloco de anúncio (meio da página) ===
-mid_ad = """
+# === Bloco híbrido para anúncios (garante exibição mesmo se o JS falhar) ===
+ad_code = """
 <html>
   <head></head>
   <body style="margin:0; padding:0; text-align:center;">
+    <!-- Primeiro tenta carregar o script normal -->
     <div id="container-58f616bbd286af88e21451bfdf8e8464" style="margin:auto;"></div>
-    <script async="async" data-cfasync="false"
-      src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>
-
-    <!-- fallback automático -->
-    <script>
-      setTimeout(function() {
-        const adContainer = document.getElementById('container-58f616bbd286af88e21451bfdf8e8464');
-        if (adContainer && adContainer.innerHTML.trim() === '') {
-          adContainer.innerHTML = `
-            <iframe src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.html"
-            width="320" height="100" frameborder="0" scrolling="no"
-            style="margin:auto; display:block; border:none;"></iframe>
-            <div style='margin-top:8px; font-size:13px; color:#777;'>
-              <a href='https://adsterra.com' target='_blank' style='color:#777; text-decoration:none;'>Anúncio</a>
-            </div>
-          `;
-        }
-      }, 3000);
-    </script>
+    <script async="async" data-cfasync="false" src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>
   </body>
 </html>
 """
-components.html(mid_ad, height=180, scrolling=False)
 
-st.divider()
+components.html(ad_code, height=250, scrolling=False)
 
-# === Rodapé e segundo banner ===
-footer_ad = """
-<html>
-  <head></head>
-  <body style="margin:0; padding:0; text-align:center;">
-    <div id="container-footer-ad" style="margin:auto;"></div>
-    <script async="async" data-cfasync="false"
-      src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>
-    <script>
-      setTimeout(function() {
-        const c = document.getElementById('container-footer-ad');
-        if (c && c.innerHTML.trim() === '') {
-          c.innerHTML = `
-            <iframe src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.html"
-            width="320" height="100" frameborder="0" scrolling="no"
-            style="margin:auto; display:block; border:none;"></iframe>
-            <div style='margin-top:8px; font-size:13px; color:#777;'>
-              <a href='https://adsterra.com' target='_blank' style='color:#777; text-decoration:none;'>Anúncio</a>
-            </div>
-          `;
-        }
-      }, 3000);
-    </script>
-  </body>
-</html>
-"""
-components.html(footer_ad, height=180, scrolling=False)
-
-# Rodapé final do app
 st.caption("Criado por Dudu Seabra | Ferramenta gratuita de distribuição de investimentos 💡")
