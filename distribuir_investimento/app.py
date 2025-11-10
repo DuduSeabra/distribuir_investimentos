@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
 import streamlit.components.v1 as components
+from streamlit.components.v1 import html
 
 # ---------- INTERFACE ----------
 st.set_page_config(page_title="InvestDistrib", page_icon="💰", layout="centered")
@@ -318,9 +319,14 @@ if st.button("Calcular distribuição", type="primary"):
 
 st.divider()
 ad_code = """
-<script async="async" data-cfasync="false" src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>
-<div id="container-58f616bbd286af88e21451bfdf8e8464"></div>
+<html>
+  <head></head>
+  <body style="margin:0; padding:0; text-align:center;">
+    <div id="container-58f616bbd286af88e21451bfdf8e8464" style="margin:auto;"></div>
+    <script async="async" data-cfasync="false" src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>
+  </body>
+</html>
 """
 
-components.html(ad_code, height=120, scrolling=False)
+html(ad_code, height=250, scrolling=False)
 st.caption("Criado por Dudu Seabra | Ferramenta gratuita de distribuição de investimentos 💡")
