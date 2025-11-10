@@ -318,15 +318,41 @@ if st.button("Calcular distribuição", type="primary"):
         
 
 st.divider()
+
+# === Bloco híbrido para anúncios (garante exibição mesmo se o JS falhar) ===
 ad_code = """
 <html>
   <head></head>
   <body style="margin:0; padding:0; text-align:center;">
+    <!-- Primeiro tenta carregar o script normal -->
     <div id="container-58f616bbd286af88e21451bfdf8e8464" style="margin:auto;"></div>
     <script async="async" data-cfasync="false" src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>
+
+    <!-- Fallback: se o script não carregar em 3 segundos, mostra o iframe -->
+    <script>
+      setTimeout(function() {
+        const adContainer = document.getElementById('container-58f616bbd286af88e21451bfdf8e8464');
+        if (adContainer && adContainer.innerHTML.trim() === '') {
+          adContainer.innerHTML = `
+            <iframe src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.html"
+            width="320" height="100" frameborder="0" scrolling="no"
+            style="margin:auto; display:block;"></iframe>
+            <div style='margin-top:8px; font-size:12px; color:#666;'>
+              <a href='https://adsterra.com' target='_blank' style='color:#666; text-decoration:none;'>Anúncio</a>
+            </div>
+          `;
+        }
+      }, 3000);
+    </script>
+
+    <!-- Fallback 2: se até o iframe não funcionar -->
+    <noscript>
+      <a href="https://adsterra.com" target="_blank">Ver anúncio</a>
+    </noscript>
   </body>
 </html>
 """
 
-html(ad_code, height=250, scrolling=False)
+components.html(ad_code, height=250, scrolling=False)
+
 st.caption("Criado por Dudu Seabra | Ferramenta gratuita de distribuição de investimentos 💡")
