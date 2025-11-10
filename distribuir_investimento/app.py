@@ -319,7 +319,6 @@ if st.button("Calcular distribuição", type="primary"):
 
 st.divider()
 
-# === Bloco híbrido para anúncios (garante exibição mesmo se o JS falhar) ===
 ad_code = """
 <html>
   <head></head>
@@ -332,5 +331,22 @@ ad_code = """
 """
 
 components.html(ad_code, height=250, scrolling=False)
+
+ad_code2 = """
+<html>
+<script type="text/javascript">
+	atOptions = {
+		'key' : '3fd3baab08d9dc1624594da0cedb14dc',
+		'format' : 'iframe',
+		'height' : 250,
+		'width' : 300,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/3fd3baab08d9dc1624594da0cedb14dc/invoke.js"></script>
+</html>
+"""
+
+components.html(ad_code2, height=250, scrolling=False)
 
 st.caption("Criado por Dudu Seabra | Ferramenta gratuita de distribuição de investimentos 💡")
