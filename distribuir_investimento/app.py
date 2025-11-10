@@ -334,19 +334,45 @@ components.html(ad_code, height=250, scrolling=False)
 
 ad_code2 = """
 <html>
-<script type="text/javascript">
-	atOptions = {
-		'key' : '3fd3baab08d9dc1624594da0cedb14dc',
-		'format' : 'iframe',
-		'height' : 250,
-		'width' : 300,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/3fd3baab08d9dc1624594da0cedb14dc/invoke.js"></script>
+  <head></head>
+  <body style="margin:0; padding:0; text-align:center;">
+    <!-- Container onde o script vai injetar o banner -->
+    <div id="ad-container-3fd3baab08d9dc1624594da0cedb14dc" style="margin:auto;"></div>
+
+    <script type="text/javascript">
+      atOptions = {
+        'key' : '3fd3baab08d9dc1624594da0cedb14dc',
+        'format' : 'iframe',
+        'height' : 250,
+        'width' : 300,
+        'params' : {}
+      };
+    </script>
+
+    <!-- Coloca o script dentro do mesmo escopo -->
+    <script type="text/javascript" src="//www.highperformanceformat.com/3fd3baab08d9dc1624594da0cedb14dc/invoke.js"></script>
+
+    <!-- Fallback automático (caso não carregue) -->
+    <script>
+      setTimeout(function() {
+        const c = document.getElementById('ad-container-3fd3baab08d9dc1624594da0cedb14dc');
+        if (c && c.innerHTML.trim() === '') {
+          c.innerHTML = `
+            <iframe src="//www.highperformanceformat.com/3fd3baab08d9dc1624594da0cedb14dc/invoke.html"
+            width="300" height="250" frameborder="0" scrolling="no"
+            style="margin:auto; display:block; border:none;"></iframe>
+            <div style='margin-top:6px; font-size:12px; color:#777;'>
+              <a href='https://highperformanceformat.com' target='_blank'
+              style='color:#777; text-decoration:none;'>Anúncio</a>
+            </div>
+          `;
+        }
+      }, 3000);
+    </script>
+  </body>
 </html>
 """
 
-components.html(ad_code2, height=250, scrolling=False)
+components.html(ad_code2, height=280, scrolling=False)
 
 st.caption("Criado por Dudu Seabra | Ferramenta gratuita de distribuição de investimentos 💡")
