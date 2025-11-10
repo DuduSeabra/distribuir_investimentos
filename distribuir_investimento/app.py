@@ -352,23 +352,6 @@ ad_code2 = """
     <!-- Coloca o script dentro do mesmo escopo -->
     <script type="text/javascript" src="//www.highperformanceformat.com/3fd3baab08d9dc1624594da0cedb14dc/invoke.js"></script>
 
-    <!-- Fallback automático (caso não carregue) -->
-    <script>
-      setTimeout(function() {
-        const c = document.getElementById('ad-container-3fd3baab08d9dc1624594da0cedb14dc');
-        if (c && c.innerHTML.trim() === '') {
-          c.innerHTML = `
-            <iframe src="//www.highperformanceformat.com/3fd3baab08d9dc1624594da0cedb14dc/invoke.html"
-            width="300" height="250" frameborder="0" scrolling="no"
-            style="margin:auto; display:block; border:none;"></iframe>
-            <div style='margin-top:6px; font-size:12px; color:#777;'>
-              <a href='https://highperformanceformat.com' target='_blank'
-              style='color:#777; text-decoration:none;'>Anúncio</a>
-            </div>
-          `;
-        }
-      }, 3000);
-    </script>
   </body>
 </html>
 """
