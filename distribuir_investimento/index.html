@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InvestDistrib 💰</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16471196441"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'AW-16471196441');
+  </script>
+</head>
+
+<body>
+  <div class="container">
+    <header class="header-container">
+      <img src="logo_investdistrib.png" alt="InvestDistrib logo" class="header-logo" />
+      <h2 class="header-subtitle">Distribuidor inteligente de investimentos</h2>
+      <hr />
+    </header>
+
+    <p class="intro-text">
+      Calcule quanto investir em cada grupo para atingir a <b>porcentagem meta</b> da sua carteira de forma simples e visual.
+    </p>
+
+    <div class="form-section">
+      <label for="numAtivos">Quantos tipos de investimentos você tem?</label>
+      <input type="number" id="numAtivos" min="1" value="4" />
+      <button onclick="gerarCampos()">Gerar campos</button>
+    </div>
+
+    <form id="ativosForm"></form>
+
+    <div id="valorDisponivelSection" style="display:none;">
+      <label for="valorDisponivel">Valor disponível para investir este mês (R$):</label>
+      <input type="text" id="valorDisponivel" placeholder="0,00" />
+      <button class="calc-button" onclick="calcularDistribuicao(event)">Calcular distribuição</button>
+    </div>
+
+    <div id="resultado"></div>
+
+    <div class="chart-section" id="chartsContainer" style="display:none;">
+      <h3>📈 Distribuição da Carteira</h3>
+      <div class="charts">
+        <div>
+          <h4>Antes do aporte</h4>
+          <canvas id="chartAntes"></canvas>
+        </div>
+        <div>
+          <h4>Depois do aporte</h4>
+          <canvas id="chartDepois"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <!-- Primeiro anúncio (igual ao que você já usa) -->
+    <div class="ad-banner">
+      <div id="container-58f616bbd286af88e21451bfdf8e8464" style="margin:auto;"></div>
+      <script async data-cfasync="false" src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>
+    </div>
+
+    <!-- Segundo anúncio -->
+    <div class="ad-banner">
+      <div id="ad-container-3fd3baab08d9dc1624594da0cedb14dc" style="margin:auto;"></div>
+      <script type="text/javascript">
+        atOptions = {
+          'key' : '3fd3baab08d9dc1624594da0cedb14dc',
+          'format' : 'iframe',
+          'height' : 250,
+          'width' : 300,
+          'params' : {}
+        };
+      </script>
+      <script type="text/javascript" src="//www.highperformanceformat.com/3fd3baab08d9dc1624594da0cedb14dc/invoke.js"></script>
+    </div>
+
+    <footer>
+      <p>Criado por Dudu Seabra | Ferramenta gratuita de distribuição de investimentos 💡</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
