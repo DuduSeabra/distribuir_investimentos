@@ -8,8 +8,8 @@ from streamlit.components.v1 import html
 # ---------- INTERFACE ----------
 st.set_page_config(page_title="InvestDistrib", page_icon="💰", layout="centered")
 
-# --- Google Ads tag (rastreamento de visitas) ---
-st.markdown("""
+# --- Google Ads tag via components.html (permite execução do script) ---
+html("""
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16471196441"></script>
 <script>
@@ -18,7 +18,9 @@ st.markdown("""
   gtag('js', new Date());
   gtag('config', 'AW-16471196441');
 </script>
-""", unsafe_allow_html=True)
+""",
+height=0,  # não ocupa espaço visível
+)
 
 # --- Detecta se é mobile (executa só uma vez) ---
 if "mobile_view" not in st.session_state:
