@@ -28,8 +28,44 @@ body {
   margin: 15px 0 25px;
 }
 
+/* Passos numerados */
+.step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 24px 0 12px;
+  text-align: left;
+}
+
+.step-number {
+  background: #007bff;
+  color: #fff;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.step-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
 .form-section {
   margin-bottom: 20px;
+}
+
+.field-label {
+  display: block;
+  font-size: 0.85rem;
+  color: #555;
+  margin-bottom: 6px;
 }
 
 input[type="text"], input[type="number"] {
@@ -60,12 +96,32 @@ button:active {
 }
 
 .calc-button {
-  margin-top: 15px;
+  margin-top: 12px;
   background-color: #28a745;
 }
 
 .calc-button:hover {
   background-color: #218838;
+}
+
+.clear-button {
+  margin-top: 12px;
+  background-color: #6c757d;
+}
+
+.clear-button:hover {
+  background-color: #5a6268;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.action-buttons button {
+  margin-left: 0;
 }
 
 /* Cards dos ativos */
@@ -81,16 +137,31 @@ button:active {
 }
 
 .ativo-bloco h4 {
-  margin: 0 0 10px;
+  margin: 0 0 12px;
   font-size: 1rem;
   color: #333;
 }
 
-.ativo-bloco input {
+.ativo-campos {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+}
+
+.ativo-campo label {
+  font-size: 0.72rem;
+  color: #666;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.ativo-campo input {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 8px;
   text-align: left;
 }
 
@@ -118,7 +189,7 @@ button:active {
   width: 100%;
   border-collapse: collapse;
   margin: 20px 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 #resultado th {
@@ -140,6 +211,25 @@ button:active {
 
 #resultado tr:hover td {
   background-color: #eaf2ff;
+}
+
+.row-ok td {
+  color: #155724;
+}
+
+.row-ok {
+  background-color: #f0fff4 !important;
+}
+
+.row-zero td {
+  color: #999;
+  font-style: italic;
+}
+
+.row-total td {
+  font-weight: 700;
+  background-color: #f0f4ff !important;
+  border-top: 2px solid #007bff;
 }
 
 .chart-section {
@@ -178,6 +268,12 @@ hr {
 }
 
 /* Mobile */
+@media (max-width: 600px) {
+  .ativo-campos {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 480px) {
   input[type="text"], input[type="number"] {
     width: 100%;
@@ -190,6 +286,10 @@ hr {
     margin-top: 8px;
   }
 
+  .action-buttons {
+    flex-direction: column;
+  }
+
   .charts {
     flex-direction: column;
     align-items: center;
@@ -197,5 +297,13 @@ hr {
 
   canvas {
     max-width: 100%;
+  }
+
+  #resultado table {
+    font-size: 0.78rem;
+  }
+
+  #resultado th, #resultado td {
+    padding: 6px 8px;
   }
 }

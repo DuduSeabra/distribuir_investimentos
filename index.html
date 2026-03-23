@@ -31,18 +31,37 @@
       Calcule quanto investir em cada grupo para atingir a <b>porcentagem meta</b> da sua carteira de forma simples e visual.
     </p>
 
+    <!-- Passo 1 -->
+    <div class="step">
+      <span class="step-number">1</span>
+      <span class="step-title">Quantos tipos de investimento você tem?</span>
+    </div>
     <div class="form-section">
-      <label for="numAtivos">Quantos tipos de investimentos você tem?</label>
       <input type="number" id="numAtivos" min="1" value="4" />
       <button onclick="gerarCampos()">Gerar campos</button>
     </div>
 
+    <!-- Passo 2 -->
+    <div class="step" id="step2" style="display:none;">
+      <span class="step-number">2</span>
+      <span class="step-title">Preencha seus ativos</span>
+    </div>
     <form id="ativosForm"></form>
 
+    <!-- Passo 3 -->
     <div id="valorDisponivelSection" style="display:none;">
-      <label for="valorDisponivel">Valor disponível para investir este mês (R$):</label>
-      <input type="text" id="valorDisponivel" placeholder="0,00" />
-      <button class="calc-button" onclick="calcularDistribuicao(event)">Calcular distribuição</button>
+      <div class="step">
+        <span class="step-number">3</span>
+        <span class="step-title">Quanto você pode investir este mês?</span>
+      </div>
+      <div class="form-section">
+        <label for="valorDisponivel" class="field-label">Valor disponível para investir (R$)</label>
+        <input type="text" id="valorDisponivel" placeholder="0,00" />
+        <div class="action-buttons">
+          <button class="calc-button" onclick="calcularDistribuicao(event)">Calcular distribuição</button>
+          <button class="clear-button" onclick="limpar()">Limpar tudo</button>
+        </div>
+      </div>
     </div>
 
     <div id="resultado"></div>
@@ -63,7 +82,7 @@
 
     <hr />
 
-    <!-- Primeiro anúncio (igual ao que você já usa) -->
+    <!-- Primeiro anúncio -->
     <div class="ad-banner">
       <div id="container-58f616bbd286af88e21451bfdf8e8464" style="margin:auto;"></div>
       <script async data-cfasync="false" src="//pl28021414.effectivegatecpm.com/58f616bbd286af88e21451bfdf8e8464/invoke.js"></script>

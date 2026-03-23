@@ -23,6 +23,7 @@ function atualizarSomaMetas() {
   el.textContent = `Total de metas: ${soma.toFixed(2).replace(".", ",")}%`;
   const ok = Math.abs(soma - 100) <= 0.05;
   el.className = ok ? "soma-ok" : "soma-erro";
+  salvarNoStorage();
 }
 
 function gerarCampos() {
@@ -30,21 +31,36 @@ function gerarCampos() {
   const form = document.getElementById("ativosForm");
   form.innerHTML = "";
 
+  document.getElementById("step2").style.display = "flex";
+
   for (let i = 1; i <= num; i++) {
     const bloco = document.createElement("div");
     bloco.className = "ativo-bloco";
     bloco.innerHTML = `
       <h4>💼 Ativo ${i}</h4>
-      <input type="text" id="nome_${i}" placeholder="Nome do ativo" value="Ativo ${i}">
-      <input type="text" id="valor_${i}" placeholder="Valor atual (R$)">
-      <input type="text" id="meta_${i}" placeholder="Meta (%)">
+      <div class="ativo-campos">
+        <div class="ativo-campo">
+          <label for="nome_${i}">Nome do ativo</label>
+          <input type="text" id="nome_${i}" placeholder="Ex: Tesouro Selic" value="Ativo ${i}">
+        </div>
+        <div class="ativo-campo">
+          <label for="valor_${i}">Valor atual (R$)</label>
+          <input type="text" id="valor_${i}" placeholder="0,00">
+        </div>
+        <div class="ativo-campo">
+          <label for="meta_${i}">Meta (%)</label>
+          <input type="text" id="meta_${i}" placeholder="0,00">
+        </div>
+      </div>
     `;
     form.appendChild(bloco);
 
     bloco.querySelector(`#valor_${i}`).addEventListener("input", function () {
       formatarMoedaBR(this);
+      salvarNoStorage();
     });
     bloco.querySelector(`#meta_${i}`).addEventListener("input", atualizarSomaMetas);
+    bloco.querySelector(`#nome_${i}`).addEventListener("input", salvarNoStorage);
   }
 
   const somaEl = document.createElement("p");
@@ -94,17 +110,33 @@ function calcularDistribuicao(e) {
   const formatBR = n => n.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
   let html = "<h3>📊 Resultado da distribuição</h3><table>";
-  html += "<tr><th>Ativo</th><th>Aporte Sugerido (R$)</th><th>% do Aporte</th></tr>";
-  for (let i = 0; i < num; i++) {
-    const pct = valorDisponivel > 0 ? ((distribuicao[i] / valorDisponivel) * 100).toFixed(1).replace(".", ",") : "0,0";
-    html += `<tr><td>${nomes[i]}</td><td>R$ ${formatBR(distribuicao[i])}</td><td>${pct}%</td></tr>`;
-  }
-  html += "</table>";
-  document.getElementById("resultado").innerHTML = html;
+  html += "<tr><th>Ativo</th><th>Valor Atual</th><th>Valor Meta</th><th>Aporte Sugerido</th><th>Status</th></tr>";
 
+  for (let i = 0; i < num; i++) {
+    const temAporte = distribuicao[i] > 0.01;
+    const rowClass = temAporte ? "row-ok" : "row-zero";
+    const status = temAporte ? "✅ Aportar" : "— Já no alvo";
+    html += `<tr class="${rowClass}">`;
+    html += `<td>${nomes[i]}</td>`;
+    html += `<td>R$ ${formatBR(investimentos[i])}</td>`;
+    html += `<td>R$ ${formatBR(valoresAlvo[i])}</td>`;
+    html += `<td>R$ ${formatBR(distribuicao[i])}</td>`;
+    html += `<td>${status}</td>`;
+    html += `</tr>`;
+  }
+
+  html += `<tr class="row-total">`;
+  html += `<td>Total</td>`;
+  html += `<td>R$ ${formatBR(totalAtual)}</td>`;
+  html += `<td>R$ ${formatBR(totalFinal)}</td>`;
+  html += `<td>R$ ${formatBR(valorDisponivel)}</td>`;
+  html += `<td></td>`;
+  html += `</tr>`;
+  html += "</table>";
+
+  document.getElementById("resultado").innerHTML = html;
   document.getElementById("chartsContainer").style.display = "block";
   desenharGraficos(nomes, investimentos, distribuicao);
-
   document.getElementById("resultado").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -139,14 +171,62 @@ function gerarCores(n) {
   return cores;
 }
 
+function salvarNoStorage() {
+  const num = parseInt(document.getElementById("numAtivos").value);
+  const dados = { num, ativos: [] };
+  for (let i = 1; i <= num; i++) {
+    dados.ativos.push({
+      nome: document.getElementById(`nome_${i}`)?.value || "",
+      valor: document.getElementById(`valor_${i}`)?.value || "",
+      meta: document.getElementById(`meta_${i}`)?.value || "",
+    });
+  }
+  localStorage.setItem("investdistrib_dados", JSON.stringify(dados));
+}
+
+function restaurarDoStorage() {
+  const raw = localStorage.getItem("investdistrib_dados");
+  if (!raw) return false;
+  try {
+    const dados = JSON.parse(raw);
+    document.getElementById("numAtivos").value = dados.num;
+    gerarCampos();
+    dados.ativos.forEach((a, idx) => {
+      const i = idx + 1;
+      const nomeEl = document.getElementById(`nome_${i}`);
+      const valorEl = document.getElementById(`valor_${i}`);
+      const metaEl = document.getElementById(`meta_${i}`);
+      if (nomeEl) nomeEl.value = a.nome;
+      if (valorEl) valorEl.value = a.valor;
+      if (metaEl) metaEl.value = a.meta;
+    });
+    atualizarSomaMetas();
+    return true;
+  } catch (err) {
+    localStorage.removeItem("investdistrib_dados");
+    return false;
+  }
+}
+
+function limpar() {
+  localStorage.removeItem("investdistrib_dados");
+  document.getElementById("numAtivos").value = 4;
+  document.getElementById("valorDisponivel").value = "";
+  document.getElementById("resultado").innerHTML = "";
+  document.getElementById("chartsContainer").style.display = "none";
+  gerarCampos();
+}
+
 document.addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
+    const active = document.activeElement;
+    if (active && active.id === "numAtivos") {
+      gerarCampos();
+      return;
+    }
     const section = document.getElementById("valorDisponivelSection");
-    if (section && section.style.display !== "none") {
-      const active = document.activeElement;
-      if (active && active.id === "valorDisponivel") {
-        calcularDistribuicao(e);
-      }
+    if (section && section.style.display !== "none" && active && active.id === "valorDisponivel") {
+      calcularDistribuicao(e);
     }
   }
 });
@@ -158,4 +238,10 @@ document.addEventListener("DOMContentLoaded", function () {
       formatarMoedaBR(this);
     });
   }
+
+  document.getElementById("numAtivos").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") gerarCampos();
+  });
+
+  restaurarDoStorage() || gerarCampos();
 });
