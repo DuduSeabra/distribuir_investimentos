@@ -48,10 +48,15 @@ button {
   margin-left: 5px;
   border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
 button:hover {
   background-color: #0069d9;
+}
+
+button:active {
+  transform: scale(0.97);
 }
 
 .calc-button {
@@ -61,6 +66,80 @@ button:hover {
 
 .calc-button:hover {
   background-color: #218838;
+}
+
+/* Cards dos ativos */
+.ativo-bloco {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  text-align: left;
+  animation: fadeSlideIn 0.2s ease both;
+}
+
+.ativo-bloco h4 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.ativo-bloco input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.ativo-bloco hr {
+  display: none;
+}
+
+/* Contador de soma de metas */
+#somaMetas {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 8px 0 16px;
+}
+
+.soma-ok {
+  color: #28a745;
+}
+
+.soma-erro {
+  color: #dc3545;
+}
+
+/* Tabela de resultados */
+#resultado table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 0.95rem;
+}
+
+#resultado th {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+}
+
+#resultado td {
+  padding: 8px 14px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+#resultado tr:nth-child(even) td {
+  background-color: #f5f9ff;
+}
+
+#resultado tr:hover td {
+  background-color: #eaf2ff;
 }
 
 .chart-section {
@@ -90,4 +169,33 @@ footer {
 hr {
   border: 0.5px solid #eee;
   margin: 20px 0;
+}
+
+/* Animações */
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  input[type="text"], input[type="number"] {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  button {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .charts {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  canvas {
+    max-width: 100%;
+  }
 }
