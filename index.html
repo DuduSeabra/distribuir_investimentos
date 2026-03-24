@@ -3,8 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>InvestDistrib 💰</title>
+  <title>InvestDistrib — Distribuidor de Investimentos</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -20,67 +23,103 @@
 </head>
 
 <body>
-  <div class="container">
-    <header class="header-container">
-      <img src="logo_investdistrib.png" alt="InvestDistrib logo" class="header-logo" />
-      <h2 class="header-subtitle">Distribuidor inteligente de investimentos</h2>
-      <hr />
-    </header>
 
-    <p class="intro-text">
-      Calcule quanto investir em cada grupo para atingir a <b>porcentagem meta</b> da sua carteira de forma simples e visual.
-    </p>
+  <!-- HERO -->
+  <header class="site-hero">
+    <div class="hero-inner">
+      <img src="logo_investdistrib.png" alt="InvestDistrib" class="hero-logo" />
+      <div class="hero-text">
+        <h1 class="hero-title">InvestDistrib</h1>
+        <p class="hero-subtitle">Distribuidor inteligente de investimentos</p>
+        <p class="hero-desc">
+          Calcule quanto investir em cada grupo para atingir a
+          <strong>porcentagem meta</strong> da sua carteira de forma simples e visual.
+        </p>
+      </div>
+    </div>
+  </header>
+
+  <!-- APP -->
+  <main class="app-container">
+
+    <!-- Stepper -->
+    <nav class="stepper" aria-label="Etapas">
+      <div class="stepper-item active" id="stepper-1">
+        <div class="stepper-circle">1</div>
+        <span class="stepper-label">Ativos</span>
+      </div>
+      <div class="stepper-line"></div>
+      <div class="stepper-item" id="stepper-2">
+        <div class="stepper-circle">2</div>
+        <span class="stepper-label">Dados</span>
+      </div>
+      <div class="stepper-line"></div>
+      <div class="stepper-item" id="stepper-3">
+        <div class="stepper-circle">3</div>
+        <span class="stepper-label">Calcular</span>
+      </div>
+    </nav>
 
     <!-- Passo 1 -->
-    <div class="step">
-      <span class="step-number">1</span>
-      <span class="step-title">Quantos tipos de investimento você tem?</span>
-    </div>
-    <div class="form-section">
-      <input type="number" id="numAtivos" min="1" value="4" />
-      <button onclick="gerarCampos()">Gerar campos</button>
-    </div>
+    <section class="step-card" id="card-step1">
+      <div class="step-card-header">
+        <span class="step-badge">1</span>
+        <h2 class="step-card-title">Quantos tipos de investimento você tem?</h2>
+      </div>
+      <div class="step-card-body">
+        <div class="inline-field">
+          <input type="number" id="numAtivos" min="1" value="4" />
+          <button class="btn btn-primary" onclick="gerarCampos()">Gerar campos</button>
+        </div>
+      </div>
+    </section>
 
     <!-- Passo 2 -->
-    <div class="step" id="step2" style="display:none;">
-      <span class="step-number">2</span>
-      <span class="step-title">Preencha seus ativos</span>
-    </div>
-    <form id="ativosForm"></form>
+    <section class="step-card" id="step2" style="display:none;">
+      <div class="step-card-header">
+        <span class="step-badge">2</span>
+        <h2 class="step-card-title">Preencha seus ativos</h2>
+      </div>
+      <div class="step-card-body">
+        <form id="ativosForm"></form>
+      </div>
+    </section>
 
     <!-- Passo 3 -->
-    <div id="valorDisponivelSection" style="display:none;">
-      <div class="step">
-        <span class="step-number">3</span>
-        <span class="step-title">Quanto você pode investir este mês?</span>
+    <section class="step-card" id="valorDisponivelSection" style="display:none;">
+      <div class="step-card-header">
+        <span class="step-badge">3</span>
+        <h2 class="step-card-title">Quanto você pode investir este mês?</h2>
       </div>
-      <div class="form-section">
-        <label for="valorDisponivel" class="field-label">Valor disponível para investir (R$)</label>
-        <input type="text" id="valorDisponivel" placeholder="0,00" />
+      <div class="step-card-body">
+        <label class="field-label" for="valorDisponivel">Valor disponível para investir (R$)</label>
+        <input type="text" id="valorDisponivel" placeholder="0,00" class="input-currency" />
         <div class="action-buttons">
-          <button class="calc-button" onclick="calcularDistribuicao(event)">Calcular distribuição</button>
-          <button class="clear-button" onclick="limpar()">Limpar tudo</button>
+          <button class="btn btn-calc" onclick="calcularDistribuicao(event)">Calcular distribuição</button>
+          <button class="btn btn-clear" onclick="limpar()">Limpar tudo</button>
         </div>
       </div>
-    </div>
+    </section>
 
-    <div id="resultado"></div>
-
-    <div class="chart-section" id="chartsContainer" style="display:none;">
-      <h3>📈 Distribuição da Carteira</h3>
-      <div class="charts">
-        <div>
-          <h4>Antes do aporte</h4>
+    <!-- Resultados -->
+    <section id="resultado-section" style="display:none;">
+      <div class="stats-grid" id="statsGrid"></div>
+      <div class="results-card">
+        <div id="resultado"></div>
+      </div>
+      <div class="charts-grid" id="chartsContainer" style="display:none;">
+        <div class="chart-card">
+          <h4 class="chart-title">Antes do aporte</h4>
           <canvas id="chartAntes"></canvas>
         </div>
-        <div>
-          <h4>Depois do aporte</h4>
+        <div class="chart-card">
+          <h4 class="chart-title">Depois do aporte</h4>
           <canvas id="chartDepois"></canvas>
         </div>
       </div>
-    </div>
+    </section>
 
-    <hr />
+    <hr class="section-divider" />
 
     <!-- Primeiro anúncio -->
     <div class="ad-banner">
@@ -103,10 +142,11 @@
       <script type="text/javascript" src="//www.highperformanceformat.com/3fd3baab08d9dc1624594da0cedb14dc/invoke.js"></script>
     </div>
 
-    <footer>
-      <p>Criado por Dudu Seabra | Ferramenta gratuita de distribuição de investimentos 💡</p>
-    </footer>
-  </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>Criado por <strong>Dudu Seabra</strong> &mdash; Ferramenta gratuita de distribuição de investimentos</p>
+  </footer>
 
   <script src="script.js"></script>
 </body>

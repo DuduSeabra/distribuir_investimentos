@@ -1,6 +1,18 @@
 let chartAntes = null;
 let chartDepois = null;
 
+/* ─── Stepper visual ─────────────────────────────────────── */
+function updateStepper(activeStep) {
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById(`stepper-${i}`);
+    if (!el) return;
+    el.classList.remove("active", "completed");
+    if (i < activeStep)  el.classList.add("completed");
+    if (i === activeStep) el.classList.add("active");
+  }
+}
+
+/* ─── Utilitários de moeda ───────────────────────────────── */
 function parseCurrencyBR(str) {
   return parseFloat(str.replace(/\./g, "").replace(",", ".")) || 0;
 }
@@ -11,6 +23,7 @@ function formatarMoedaBR(input) {
   input.value = v.replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
+/* ─── Soma de metas em tempo real ────────────────────────── */
 function atualizarSomaMetas() {
   const num = parseInt(document.getElementById("numAtivos").value);
   let soma = 0;
@@ -26,12 +39,13 @@ function atualizarSomaMetas() {
   salvarNoStorage();
 }
 
+/* ─── Gerar campos ───────────────────────────────────────── */
 function gerarCampos() {
   const num = parseInt(document.getElementById("numAtivos").value);
   const form = document.getElementById("ativosForm");
   form.innerHTML = "";
 
-  document.getElementById("step2").style.display = "flex";
+  document.getElementById("step2").style.display = "block";
 
   for (let i = 1; i <= num; i++) {
     const bloco = document.createElement("div");
@@ -72,8 +86,11 @@ function gerarCampos() {
   document.getElementById("valorDisponivelSection").style.display = "block";
   document.getElementById("resultado").innerHTML = "";
   document.getElementById("chartsContainer").style.display = "none";
+
+  updateStepper(2);
 }
 
+/* ─── Calcular distribuição ──────────────────────────────── */
 function calcularDistribuicao(e) {
   e.preventDefault();
 
@@ -109,6 +126,24 @@ function calcularDistribuicao(e) {
 
   const formatBR = n => n.toFixed(2).replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 
+  /* Stats cards */
+  document.getElementById("resultado-section").style.display = "block";
+  const statsHtml = `
+    <div class="stat-card">
+      <div class="stat-label">Total atual</div>
+      <div class="stat-value">R$ ${formatBR(totalAtual)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total após aporte</div>
+      <div class="stat-value">R$ ${formatBR(totalFinal)}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Aporte total</div>
+      <div class="stat-value">R$ ${formatBR(valorDisponivel)}</div>
+    </div>`;
+  document.getElementById("statsGrid").innerHTML = statsHtml;
+
+  /* Tabela */
   let html = "<h3>📊 Resultado da distribuição</h3><table>";
   html += "<tr><th>Ativo</th><th>Valor Atual</th><th>Valor Meta</th><th>Aporte Sugerido</th><th>Status</th></tr>";
 
@@ -135,50 +170,51 @@ function calcularDistribuicao(e) {
   html += "</table>";
 
   document.getElementById("resultado").innerHTML = html;
-  document.getElementById("chartsContainer").style.display = "block";
+  document.getElementById("chartsContainer").style.display = "grid";
   desenharGraficos(nomes, investimentos, distribuicao);
-  document.getElementById("resultado").scrollIntoView({ behavior: "smooth", block: "start" });
+
+  document.getElementById("resultado-section").scrollIntoView({ behavior: "smooth", block: "start" });
+
+  updateStepper(3);
 }
 
+/* ─── Gráficos ───────────────────────────────────────────── */
 function desenharGraficos(nomes, investimentos, distribuicao) {
   const finalValores = investimentos.map((v, i) => v + distribuicao[i]);
-
   const ctx1 = document.getElementById("chartAntes").getContext("2d");
   const ctx2 = document.getElementById("chartDepois").getContext("2d");
 
   if (chartAntes) chartAntes.destroy();
   if (chartDepois) chartDepois.destroy();
 
+  const opts = { plugins: { legend: { position: "bottom" } } };
+
   chartAntes = new Chart(ctx1, {
     type: "pie",
     data: { labels: nomes, datasets: [{ data: investimentos, backgroundColor: gerarCores(nomes.length) }] },
-    options: { plugins: { legend: { position: "bottom" } } }
+    options: opts
   });
 
   chartDepois = new Chart(ctx2, {
     type: "pie",
     data: { labels: nomes, datasets: [{ data: finalValores, backgroundColor: gerarCores(nomes.length) }] },
-    options: { plugins: { legend: { position: "bottom" } } }
+    options: opts
   });
 }
 
 function gerarCores(n) {
-  const cores = [];
-  for (let i = 0; i < n; i++) {
-    const hue = Math.floor((360 / n) * i);
-    cores.push(`hsl(${hue}, 70%, 60%)`);
-  }
-  return cores;
+  return Array.from({ length: n }, (_, i) => `hsl(${Math.floor((360 / n) * i)}, 70%, 60%)`);
 }
 
+/* ─── localStorage ───────────────────────────────────────── */
 function salvarNoStorage() {
   const num = parseInt(document.getElementById("numAtivos").value);
   const dados = { num, ativos: [] };
   for (let i = 1; i <= num; i++) {
     dados.ativos.push({
-      nome: document.getElementById(`nome_${i}`)?.value || "",
+      nome:  document.getElementById(`nome_${i}`)?.value  || "",
       valor: document.getElementById(`valor_${i}`)?.value || "",
-      meta: document.getElementById(`meta_${i}`)?.value || "",
+      meta:  document.getElementById(`meta_${i}`)?.value  || "",
     });
   }
   localStorage.setItem("investdistrib_dados", JSON.stringify(dados));
@@ -193,55 +229,49 @@ function restaurarDoStorage() {
     gerarCampos();
     dados.ativos.forEach((a, idx) => {
       const i = idx + 1;
-      const nomeEl = document.getElementById(`nome_${i}`);
+      const nomeEl  = document.getElementById(`nome_${i}`);
       const valorEl = document.getElementById(`valor_${i}`);
-      const metaEl = document.getElementById(`meta_${i}`);
-      if (nomeEl) nomeEl.value = a.nome;
+      const metaEl  = document.getElementById(`meta_${i}`);
+      if (nomeEl)  nomeEl.value  = a.nome;
       if (valorEl) valorEl.value = a.valor;
-      if (metaEl) metaEl.value = a.meta;
+      if (metaEl)  metaEl.value  = a.meta;
     });
     atualizarSomaMetas();
     return true;
-  } catch (err) {
+  } catch {
     localStorage.removeItem("investdistrib_dados");
     return false;
   }
 }
 
+/* ─── Limpar ─────────────────────────────────────────────── */
 function limpar() {
   localStorage.removeItem("investdistrib_dados");
   document.getElementById("numAtivos").value = 4;
   document.getElementById("valorDisponivel").value = "";
   document.getElementById("resultado").innerHTML = "";
   document.getElementById("chartsContainer").style.display = "none";
+  document.getElementById("resultado-section").style.display = "none";
+  document.getElementById("statsGrid").innerHTML = "";
   gerarCampos();
+  updateStepper(1);
 }
 
+/* ─── Event listeners globais ────────────────────────────── */
 document.addEventListener("keydown", function (e) {
-  if (e.key === "Enter") {
-    const active = document.activeElement;
-    if (active && active.id === "numAtivos") {
-      gerarCampos();
-      return;
-    }
-    const section = document.getElementById("valorDisponivelSection");
-    if (section && section.style.display !== "none" && active && active.id === "valorDisponivel") {
-      calcularDistribuicao(e);
-    }
+  if (e.key !== "Enter") return;
+  const active = document.activeElement;
+  if (active?.id === "numAtivos") { gerarCampos(); return; }
+  const section = document.getElementById("valorDisponivelSection");
+  if (section?.style.display !== "none" && active?.id === "valorDisponivel") {
+    calcularDistribuicao(e);
   }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  const valorDispEl = document.getElementById("valorDisponivel");
-  if (valorDispEl) {
-    valorDispEl.addEventListener("input", function () {
-      formatarMoedaBR(this);
-    });
-  }
-
-  document.getElementById("numAtivos").addEventListener("keydown", function (e) {
-    if (e.key === "Enter") gerarCampos();
+  document.getElementById("valorDisponivel").addEventListener("input", function () {
+    formatarMoedaBR(this);
   });
 
-  restaurarDoStorage() || gerarCampos();
+  if (!restaurarDoStorage()) gerarCampos();
 });
